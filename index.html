@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <script>
+        axios.get('https://sheets.googleapis.com/v4/spreadsheets/14WWjjtv03EKBh67-_D4oMSldbgdCM923yodVUpzPP8c/values/Sheet1!A2:BX25?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM')
+            .then(function(response) {
+                console.log(response.data)
+        })
+
+    </script>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div>
+            Hello World
+        </div>
+        
+        <!-- <script src="app.js" async defer></script> -->
+    </body>
+</html>
