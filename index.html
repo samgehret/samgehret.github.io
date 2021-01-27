@@ -33,8 +33,16 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div class="flex-container">
-            <div class='question-answer'></div>
-            <div class='leaderboard'></div>
+            <div>
+                <h2>Answer Key</h2>
+                <div class='question-answer'></div>
+            </div>
+            <div>
+                <h2>Leaderboard</h2>
+                <div class='leaderboard'></div>
+            </div>
+            
+            
         </div>
         
         <!-- <script src="app.js" async defer></script> -->
@@ -70,7 +78,7 @@
         tableHeaders.forEach(header => {
             let scoreHeader = document.createElement('th')
             scoreHeader.innerText = header
-            console.log(header)
+            // console.log(header)
             scoreboardTableHeaderRow.append(scoreHeader)
     
         })
@@ -89,7 +97,7 @@
 
 
         const leaderDiv = document.querySelector("div.leaderboard")
-        let leaderHeaders = ["Player", "Score"]
+        let leaderHeaders = ["Position", "Player", "Score"]
 
         while (leaderDiv.firstChild) {
             leaderDiv.removeChild(leaderDiv.firstChild)
@@ -117,7 +125,7 @@
         leaderHeaders.forEach(header => {
             let leaderHeader = document.createElement('th')
             leaderHeader.innerText = header
-            console.log(header)
+            // console.log(header)
             leaderboardTableHeaderRow.append(leaderHeader)
     
         })
@@ -134,10 +142,10 @@
 
 
 
-        axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AT40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM&majorDimension=COLUMNS')
+        axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AN40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM&majorDimension=COLUMNS')
             .then(function(response) {
                 let data = response.data.values
-                console.log(response.data)
+                // console.log(response.data)
                 var k;
                 for (k = 1; k < data.length; k++) {
                     let scoreboardTableBodyRow = document.createElement('tr') // Create the current table row
@@ -163,34 +171,34 @@
                 
         })
 
-        axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AT40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM')
+        axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AN40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM')
         .then(function (response) {
-            console.log(response.data)
             let leaderData = response.data.values
-            // console.log(leaderData)
-            // let leaderboardTableBodyRow = document.createElement('tr') // Create the current table row
-            //         leaderboardTableBodyRow.className = 'leaderboardTableBodyRow'
-            //         let player = document.createElement('td')
-            //         player.innerText = row[2]
+            console.log('leader data', leaderData)
 
-            //         let score = document.createElement('td')
-            //         score.innerText = row[3]
-            //         leaderboardTableBodyRow.append(player, score)
-            //         leaderboardTable.append(leaderboardTableBodyRow)
+            leaderData.shift()
+            leaderData.shift()
+
+            var sortedArray = leaderData.sort(function(a, b) {
+                return b[0] - a[0];
+            });
+            console.log('sorted', sortedArray)
 
             var i;
-            for (i = 2; i < leaderData.length; i++) {
-                console.log(leaderData)
-                console.log(leaderData[i][0])
-
+            for (i = 0; i < leaderData.length; i++) {
                 let leaderboardTableBodyRow = document.createElement('tr') // Create the current table row
                     leaderboardTableBodyRow.className = 'leaderboardTableBodyRow'
+
+                    let position = document.createElement('td')
+                    position.innerText= i + 1
+
                     let player = document.createElement('td')
                     player.innerText = leaderData[i][1]
 
                     let score = document.createElement('td')
+
                     score.innerText = leaderData[i][0]
-                    leaderboardTableBodyRow.append(player, score)
+                    leaderboardTableBodyRow.append(position, player, score)
                     leaderboardTable.append(leaderboardTableBodyRow)
             }
         })
