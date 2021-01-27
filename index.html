@@ -8,22 +8,192 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    </head>
-    <script>
-        axios.get('https://sheets.googleapis.com/v4/spreadsheets/14WWjjtv03EKBh67-_D4oMSldbgdCM923yodVUpzPP8c/values/Sheet1!A2:BX25?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM')
-            .then(function(response) {
-                console.log(response.data)
-        })
+        <style>
+            .flex-container {
+                display: flex;
+                /* justify-content: center; */
+                margin: 10px;
+            }
 
-    </script>
+            table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+              margin: 10px;
+            }
+            th, td {
+              padding: 5px;
+            }
+            th {
+              text-align: left;
+            }
+        </style>
+    </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div>
-            Hello World
+        <div class="flex-container">
+            <div class='question-answer'></div>
+            <div class='leaderboard'></div>
         </div>
         
         <!-- <script src="app.js" async defer></script> -->
     </body>
+
+    <script>
+        const scoreDiv = document.querySelector("div.question-answer")
+        let tableHeaders = ["Question", "Answer"]
+
+        while (scoreDiv.firstChild) {
+            scoreDiv.removeChild(scoreDiv.firstChild)
+        }
+
+        // Create table
+        scoreboardTable = document.createElement('table')
+        scoreboardTable.className = 'scoreboardTable'
+
+        //Append Table to Div
+        scoreDiv.append(scoreboardTable)
+
+        //Create Table Header
+        scoreboardTableHead = document.createElement('thead')
+        scoreboardTableHead.className = 'scoreboardTableHead'
+
+        //Append Table head to table
+        scoreboardTable.append(scoreboardTableHead)
+
+        scoreboardTableHeaderRow = document.createElement('tr')
+        scoreboardTableHeaderRow.className = 'scoreboardTableHeaderRow'
+
+        scoreboardTableHead.append(scoreboardTableHeaderRow)
+
+        tableHeaders.forEach(header => {
+            let scoreHeader = document.createElement('th')
+            scoreHeader.innerText = header
+            console.log(header)
+            scoreboardTableHeaderRow.append(scoreHeader)
+    
+        })
+
+        scoreboardTableBody = document.createElement('tbody')
+        scoreboardTableBody.className = 'scoreboardTable-Body'
+        scoreboardTable.append(scoreboardTableBody)
+
+        scoreDiv.append(scoreboardTable)
+
+
+
+
+
+
+
+
+        const leaderDiv = document.querySelector("div.leaderboard")
+        let leaderHeaders = ["Player", "Score"]
+
+        while (leaderDiv.firstChild) {
+            leaderDiv.removeChild(leaderDiv.firstChild)
+        }
+
+        // Create table
+        leaderboardTable = document.createElement('table')
+        leaderboardTable.className = 'leaderboardTable'
+
+        //Append Table to Div
+        leaderDiv.append(leaderboardTable)
+
+        //Create Table Header
+        leaderboardTableHead = document.createElement('thead')
+        leaderboardTableHead.className = 'leaderboardTableHead'
+
+        //Append Table head to table
+        leaderboardTable.append(leaderboardTableHead)
+
+        leaderboardTableHeaderRow = document.createElement('tr')
+        leaderboardTableHeaderRow.className = 'leaderboardTableHeaderRow'
+
+        leaderboardTableHead.append(leaderboardTableHeaderRow)
+
+        leaderHeaders.forEach(header => {
+            let leaderHeader = document.createElement('th')
+            leaderHeader.innerText = header
+            console.log(header)
+            leaderboardTableHeaderRow.append(leaderHeader)
+    
+        })
+
+        leaderboardTableBody = document.createElement('tbody')
+        leaderboardTableBody.className = 'leaderboardTable-Body'
+        leaderboardTable.append(leaderboardTableBody)
+
+        leaderDiv.append(leaderboardTable)
+
+        
+
+
+
+
+
+        axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AT40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM&majorDimension=COLUMNS')
+            .then(function(response) {
+                let data = response.data.values
+                console.log(response.data)
+                var k;
+                for (k = 1; k < data.length; k++) {
+                    let scoreboardTableBodyRow = document.createElement('tr') // Create the current table row
+                    scoreboardTableBodyRow.className = 'scoreboardTableBodyRow'
+                    let question = document.createElement('td')
+                    question.innerText = data[k][0]
+
+                    let answer = document.createElement('td')
+                    answer.innerText = data[k][1]
+                    scoreboardTableBodyRow.append(question, answer)
+                    scoreboardTable.append(scoreboardTableBodyRow)
+                }
+
+
+
+                // data.forEach(row => {
+                //     // console.log(row[0])
+                //     // console.log(row[1])
+
+
+
+                // })
+                
+        })
+
+        axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AT40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM')
+        .then(function (response) {
+            console.log(response.data)
+            let leaderData = response.data.values
+            // console.log(leaderData)
+            // let leaderboardTableBodyRow = document.createElement('tr') // Create the current table row
+            //         leaderboardTableBodyRow.className = 'leaderboardTableBodyRow'
+            //         let player = document.createElement('td')
+            //         player.innerText = row[2]
+
+            //         let score = document.createElement('td')
+            //         score.innerText = row[3]
+            //         leaderboardTableBodyRow.append(player, score)
+            //         leaderboardTable.append(leaderboardTableBodyRow)
+
+            var i;
+            for (i = 2; i < leaderData.length; i++) {
+                console.log(leaderData)
+                console.log(leaderData[i][0])
+
+                let leaderboardTableBodyRow = document.createElement('tr') // Create the current table row
+                    leaderboardTableBodyRow.className = 'leaderboardTableBodyRow'
+                    let player = document.createElement('td')
+                    player.innerText = leaderData[i][1]
+
+                    let score = document.createElement('td')
+                    score.innerText = leaderData[i][0]
+                    leaderboardTableBodyRow.append(player, score)
+                    leaderboardTable.append(leaderboardTableBodyRow)
+            }
+        })
+
+    </script>
 </html>
