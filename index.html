@@ -16,10 +16,6 @@
                 /* background: #228B22; */
                 /* color: white; */
             }
-            
-            /* .answer-key {
-                /* width: 50%; */
-            } */
 
             table {
                 border-spacing: 10px;
@@ -30,6 +26,8 @@
                 display: flex;
                 justify-content: center;
                 margin: 10px;
+                flex-wrap: wrap;
+                /* flex-direction: column-reverse; */
             }
 
             table, th, td {
@@ -62,13 +60,13 @@
             </p>
         </div>
         <div class="flex-container">
+            <div class = 'leaderdiv'>
+                <h2 class = 'header'>Leaderboard</h2>
+                <div class='leaderboard'></div>
+            </div>
             <div class = 'answer-key'>
                 <h2 class = 'header'>Answer Key</h2>
                 <div class='question-answer'></div>
-            </div>
-            <div>
-                <h2 class = 'header'>Leaderboard</h2>
-                <div class='leaderboard'></div>
             </div>
             
             
