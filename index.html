@@ -11,7 +11,7 @@
         <style>
             .flex-container {
                 display: flex;
-                /* justify-content: center; */
+                justify-content: center;
                 margin: 10px;
             }
 
@@ -26,19 +26,28 @@
             th {
               text-align: left;
             }
+            .header {
+                text-align: center;
+            }
         </style>
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+        <div class='header'>
+            <h1>Gehret Superbowl Pool</h1>
+            <p>
+                Follow along in real time as the game goes on. Leaderboard will update automatically every 5 minutes.
+            </p>
+        </div>
         <div class="flex-container">
             <div>
-                <h2>Answer Key</h2>
+                <h2 class = 'header'>Answer Key</h2>
                 <div class='question-answer'></div>
             </div>
             <div>
-                <h2>Leaderboard</h2>
+                <h2 class = 'header'>Leaderboard</h2>
                 <div class='leaderboard'></div>
             </div>
             
@@ -49,6 +58,7 @@
     </body>
 
     <script>
+    function updateTable() {
         const scoreDiv = document.querySelector("div.question-answer")
         let tableHeaders = ["Question", "Answer"]
 
@@ -86,16 +96,7 @@
         scoreboardTableBody = document.createElement('tbody')
         scoreboardTableBody.className = 'scoreboardTable-Body'
         scoreboardTable.append(scoreboardTableBody)
-
         scoreDiv.append(scoreboardTable)
-
-
-
-
-
-
-
-
         const leaderDiv = document.querySelector("div.leaderboard")
         let leaderHeaders = ["Position", "Player", "Score"]
 
@@ -139,10 +140,7 @@
         
 
 
-
-
-
-        axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AN40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM&majorDimension=COLUMNS')
+            axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AN40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM&majorDimension=COLUMNS')
             .then(function(response) {
                 let data = response.data.values
                 // console.log(response.data)
@@ -158,50 +156,47 @@
                     scoreboardTableBodyRow.append(question, answer)
                     scoreboardTable.append(scoreboardTableBodyRow)
                 }
-
-
-
-                // data.forEach(row => {
-                //     // console.log(row[0])
-                //     // console.log(row[1])
-
-
-
-                // })
                 
-        })
+            })
 
-        axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AN40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM')
-        .then(function (response) {
-            let leaderData = response.data.values
-            console.log('leader data', leaderData)
+            axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AN40?key=AIzaSyAL4ItIvnV3cHkeKt4r0l70KnsFB4qTygM')
+            .then(function (response) {
+                let leaderData = response.data.values
+                console.log('leader data', leaderData)
 
-            leaderData.shift()
-            leaderData.shift()
+                leaderData.shift()
+                leaderData.shift()
 
-            var sortedArray = leaderData.sort(function(a, b) {
-                return b[0] - a[0];
-            });
-            console.log('sorted', sortedArray)
+                var sortedArray = leaderData.sort(function(a, b) {
+                    return b[0] - a[0];
+                });
+                console.log('sorted', sortedArray)
 
-            var i;
-            for (i = 0; i < leaderData.length; i++) {
-                let leaderboardTableBodyRow = document.createElement('tr') // Create the current table row
-                    leaderboardTableBodyRow.className = 'leaderboardTableBodyRow'
+                var i;
+                for (i = 0; i < leaderData.length; i++) {
+                    let leaderboardTableBodyRow = document.createElement('tr') // Create the current table row
+                        leaderboardTableBodyRow.className = 'leaderboardTableBodyRow'
 
-                    let position = document.createElement('td')
-                    position.innerText= i + 1
+                        let position = document.createElement('td')
+                        position.innerText= i + 1
 
-                    let player = document.createElement('td')
-                    player.innerText = leaderData[i][1]
+                        let player = document.createElement('td')
+                        player.innerText = leaderData[i][1]
 
-                    let score = document.createElement('td')
+                        let score = document.createElement('td')
 
-                    score.innerText = leaderData[i][0]
-                    leaderboardTableBodyRow.append(position, player, score)
-                    leaderboardTable.append(leaderboardTableBodyRow)
-            }
-        })
+                        score.innerText = leaderData[i][0]
+                        leaderboardTableBodyRow.append(position, player, score)
+                        leaderboardTable.append(leaderboardTableBodyRow)
+                }
+            })
+
+        }
+
+
+
+        updateTable()
+        setInterval(updateTable, 300000)
 
     </script>
 </html>
