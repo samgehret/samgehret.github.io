@@ -7,8 +7,25 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                /* background: #228B22; */
+                /* color: white; */
+            }
+            
+            .answer-key {
+                width: 50%;
+            }
+
+            table {
+                border-spacing: 10px;
+            }
+
+
             .flex-container {
                 display: flex;
                 justify-content: center;
@@ -21,10 +38,13 @@
               margin: 10px;
             }
             th, td {
-              padding: 5px;
+              padding: 10px;
             }
             th {
               text-align: left;
+              font-weight: bold;
+              background: grey;
+              color: white;
             }
             .header {
                 text-align: center;
@@ -36,13 +56,13 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div class='header'>
-            <h1>Gehret Superbowl Pool</h1>
+            <h1>Gehret Superbowl 55 Pool</h1>
             <p>
                 Follow along in real time as the game goes on. Leaderboard will update automatically every 5 minutes.
             </p>
         </div>
         <div class="flex-container">
-            <div>
+            <div class = 'answer-key'>
                 <h2 class = 'header'>Answer Key</h2>
                 <div class='question-answer'></div>
             </div>
