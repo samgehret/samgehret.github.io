@@ -117,7 +117,6 @@
         tr:hover td { background: rgba(105,190,40,0.05); }
         .position-1 td { background: linear-gradient(90deg, rgba(255,215,0,0.2), transparent); }
         .position-2 td { background: linear-gradient(90deg, rgba(192,192,192,0.15), transparent); }
-        .position-3 td { background: linear-gradient(90deg, rgba(205,127,50,0.15), transparent); }
         .position-last td { background: linear-gradient(90deg, rgba(198,12,48,0.2), transparent); }
         .loading { text-align: center; padding: 20px; color: #A5ACAF; font-size: 0.85em; }
         .last-updated { text-align: center; color: #A5ACAF; font-size: 0.65em; margin-top: 10px; }
@@ -175,7 +174,7 @@
 
 <script>
 const LEADERBOARD_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY';
-const ANSWERS_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AO250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY&majorDimension=COLUMNS';
+const ANSWERS_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY&majorDimension=COLUMNS';
 
 function showError(msg) {
     const box = document.getElementById('error-box');
@@ -194,22 +193,69 @@ function renderLeaderboard(data) {
         .filter(p => p.name)
         .sort((a, b) => b.score - a.score);
     
-    let html = '<table><thead><tr><th>#</th><th>Player</th><th>Score</th></tr></thead><tbody>';
-    rows.slice(0, 3).forEach((row, i) => {
-        const cls = ` class="position-${i+1}"`;
-        const medal = i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : '🥉 ';
-        html += `<tr${cls}><td>${i+1}</td><td>${medal}${row.name}</td><td>${row.score}</td></tr>`;
-    });
-    
-    // Insert last place right after top 3
-    if (rows.length > 3) {
-        const last = rows[rows.length - 1];
-        html += `<tr class="position-last"><td>${rows.length}</td><td>💩 ${last.name}</td><td>${last.score}</td></tr>`;
+    if (rows.length === 0) {
+        container.innerHTML = '<p>No data available</p>';
+        return;
     }
     
-    // Add remaining players (4th to second-to-last)
-    rows.slice(3, -1).forEach((row, i) => {
-        html += `<tr><td>${i+4}</td><td>${row.name}</td><td>${row.score}</td></tr>`;
+    // Determine unique scores for ranking
+    const uniqueScores = [...new Set(rows.map(r => r.score))].sort((a, b) => b - a);
+    const lastScore = uniqueScores[uniqueScores.length - 1];
+    const firstPlaceScore = uniqueScores[0];
+    const firstPlaceTied = rows.filter(r => r.score === firstPlaceScore).length > 1;
+    
+    // Assign ranks based on score position
+    const getRankInfo = (score, index) => {
+        const scoreRank = uniqueScores.indexOf(score) + 1; // 1st unique score = rank 1, etc.
+        const isLast = score === lastScore;
+        
+        if (isLast && rows.length > 1) {
+            return { emoji: '💩 ', cls: 'position-last' };
+        } else if (scoreRank === 1) {
+            return { emoji: '🥇 ', cls: 'position-1' };
+        } else if (scoreRank === 2 && !firstPlaceTied) {
+            return { emoji: '🥈 ', cls: 'position-2' };
+        }
+        return { emoji: '', cls: '' };
+    };
+    
+    let html = '<table><thead><tr><th>#</th><th>Player</th><th>Score</th></tr></thead><tbody>';
+    
+    // Separate players into groups
+    const firstPlace = rows.filter(r => r.score === firstPlaceScore);
+    const secondPlace = !firstPlaceTied ? rows.filter(r => uniqueScores.indexOf(r.score) + 1 === 2) : [];
+    const lastPlace = rows.filter(r => r.score === lastScore && rows.length > 1 && r.score !== firstPlaceScore);
+    const others = rows.filter(r => {
+        const isFirst = r.score === firstPlaceScore;
+        const isSecond = !firstPlaceTied && uniqueScores.indexOf(r.score) + 1 === 2;
+        const isLast = r.score === lastScore && rows.length > 1 && r.score !== firstPlaceScore;
+        return !isFirst && !isSecond && !isLast;
+    });
+    
+    let position = 1;
+    
+    // First place
+    firstPlace.forEach(row => {
+        html += `<tr class="position-1"><td>${position}</td><td>🥇 ${row.name}</td><td>${row.score}</td></tr>`;
+        position++;
+    });
+    
+    // Second place (only if no tie for first)
+    secondPlace.forEach(row => {
+        html += `<tr class="position-2"><td>${position}</td><td>🥈 ${row.name}</td><td>${row.score}</td></tr>`;
+        position++;
+    });
+    
+    // Last place (right after 1st/2nd)
+    lastPlace.forEach(row => {
+        const lastPosition = rows.indexOf(row) + 1;
+        html += `<tr class="position-last"><td>${rows.length - lastPlace.length + lastPlace.indexOf(row) + 1}</td><td>💩 ${row.name}</td><td>${row.score}</td></tr>`;
+    });
+    
+    // Everyone else
+    others.forEach(row => {
+        const originalPosition = rows.indexOf(row) + 1;
+        html += `<tr><td>${originalPosition}</td><td>${row.name}</td><td>${row.score}</td></tr>`;
     });
     
     html += '</tbody></table>';
