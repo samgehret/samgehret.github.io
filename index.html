@@ -1,221 +1,258 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <style>
-            body {
-                font-family: 'Inter', sans-serif;
-                /* background: #228B22; */
-                /* color: white; */
-            }
-
-            table {
-                border-spacing: 10px;
-            }
-
-
-            .flex-container {
-                display: flex;
-                justify-content: center;
-                margin: 10px;
-                flex-wrap: wrap;
-                /* flex-direction: column-reverse; */
-            }
-
-            table, th, td {
-              border: 1px solid black;
-              border-collapse: collapse;
-              margin: 10px;
-            }
-            th, td {
-              padding: 10px;
-            }
-            th {
-              text-align: left;
-              font-weight: bold;
-              background: grey;
-              color: white;
-            }
-            .header {
-                text-align: center;
-            }
-        </style>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <div class='header'>
-            <h1>Gehret Superbowl 58 Pool</h1>
-            <p>
-                Follow along in real time as the game goes on. Leaderboard will update automatically every 5 minutes.
-            </p>
-        </div>
-        <div class="flex-container">
-            <div class = 'leaderdiv'>
-                <h2 class = 'header'>Leaderboard</h2>
-                <div class='leaderboard'></div>
-            </div>
-            <div class = 'answer-key'>
-                <h2 class = 'header'>Answer Key</h2>
-                <div class='question-answer'></div>
-            </div>
-            
-            
-        </div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gehret Superbowl 60 Pool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #002244 0%, #0a3d62 50%, #002244 100%);
+            color: #fff;
+            padding: 10px;
+        }
+        .header {
+            text-align: center;
+            padding: 15px 10px;
+            background: linear-gradient(135deg, #002244 0%, #002244 45%, #1a1a1a 50%, #C60C30 55%, #002244 100%);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid #69BE28;
+            border-bottom: 4px solid #C60C30;
+        }
+        .logo-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+        }
+        .team-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        .header h1 {
+            font-size: 1.4em;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .header .subtitle {
+            font-size: 0.75em;
+            color: #B0B7BC;
+            margin-top: 5px;
+        }
+        .sb-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #B0B7BC, #A5ACAF);
+            color: #002244;
+            font-weight: 800;
+            font-size: 0.7em;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 8px;
+        }
+        .error-box {
+            background: #C60C30;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px auto;
+            max-width: 600px;
+            display: none;
+            font-size: 0.85em;
+        }
+        .flex-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+        .card {
+            background: linear-gradient(180deg, rgba(0,34,68,0.9) 0%, rgba(0,20,40,0.95) 100%);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(105,190,40,0.3);
+            flex: 1;
+            min-width: 0;
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .card.seahawks { border-color: rgba(105,190,40,0.5); }
+        .card.patriots { border-color: rgba(198,12,48,0.5); }
+        .card h2 {
+            text-align: center;
+            margin: 0 0 10px 0;
+            font-size: 0.95em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .card.seahawks h2 { color: #69BE28; }
+        .card.patriots h2 { color: #C60C30; }
+        .card-icon {
+            width: 24px;
+            height: 24px;
+        }
+        .table-wrapper { overflow-y: auto; flex: 1; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.7em; }
+        th, td { padding: 6px 6px; text-align: left; border-bottom: 1px solid rgba(165,172,175,0.15); }
+        thead { position: sticky; top: 0; z-index: 10; }
+        .seahawks th { background: #002244; color: #69BE28; }
+        .patriots th { background: #002244; color: #C60C30; }
+        th { font-weight: 600; font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.5px; }
+        tr:hover td { background: rgba(105,190,40,0.05); }
+        .position-1 td { background: linear-gradient(90deg, rgba(255,215,0,0.2), transparent); }
+        .position-2 td { background: linear-gradient(90deg, rgba(192,192,192,0.15), transparent); }
+        .position-3 td { background: linear-gradient(90deg, rgba(205,127,50,0.15), transparent); }
+        .position-last td { background: linear-gradient(90deg, rgba(198,12,48,0.2), transparent); }
+        .loading { text-align: center; padding: 20px; color: #A5ACAF; font-size: 0.85em; }
+        .last-updated { text-align: center; color: #A5ACAF; font-size: 0.65em; margin-top: 10px; }
         
-        <!-- <script src="app.js" async defer></script> -->
-    </body>
-
-    <script>
-    function updateTable() {
-        const scoreDiv = document.querySelector("div.question-answer")
-        let tableHeaders = ["Question", "Answer"]
-
-        while (scoreDiv.firstChild) {
-            scoreDiv.removeChild(scoreDiv.firstChild)
+        @media (min-width: 768px) {
+            body { padding: 20px; }
+            .header { padding: 25px 20px; margin-bottom: 25px; border-radius: 16px; }
+            .logo-row { gap: 25px; margin-bottom: 12px; }
+            .team-logo { width: 70px; height: 70px; }
+            .header h1 { font-size: 2.2em; letter-spacing: 3px; }
+            .header .subtitle { font-size: 0.9em; }
+            .sb-badge { font-size: 0.8em; padding: 6px 16px; }
+            .flex-container { gap: 25px; }
+            .card { padding: 20px; border-radius: 16px; max-height: 65vh; }
+            .card h2 { font-size: 1.2em; margin-bottom: 15px; }
+            .card-icon { width: 30px; height: 30px; }
+            table { font-size: 0.85em; }
+            th, td { padding: 10px 12px; }
+            th { font-size: 0.85em; background: #002244; }
+            .last-updated { font-size: 0.8em; margin-top: 20px; }
         }
-
-        // Create table
-        scoreboardTable = document.createElement('table')
-        scoreboardTable.className = 'scoreboardTable'
-
-        //Append Table to Div
-        scoreDiv.append(scoreboardTable)
-
-        //Create Table Header
-        scoreboardTableHead = document.createElement('thead')
-        scoreboardTableHead.className = 'scoreboardTableHead'
-
-        //Append Table head to table
-        scoreboardTable.append(scoreboardTableHead)
-
-        scoreboardTableHeaderRow = document.createElement('tr')
-        scoreboardTableHeaderRow.className = 'scoreboardTableHeaderRow'
-
-        scoreboardTableHead.append(scoreboardTableHeaderRow)
-
-        tableHeaders.forEach(header => {
-            let scoreHeader = document.createElement('th')
-            scoreHeader.innerText = header
-            // console.log(header)
-            scoreboardTableHeaderRow.append(scoreHeader)
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-row">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Seattle_Seahawks_logo.svg/200px-Seattle_Seahawks_logo.svg.png" alt="Seahawks" class="team-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/b/b9/New_England_Patriots_logo.svg/200px-New_England_Patriots_logo.svg.png" alt="Patriots" class="team-logo">
+        </div>
+        <h1>Gehret Superbowl Pool</h1>
+        <p class="subtitle">🏈 Seahawks vs Patriots 🏈</p>
+        <span class="sb-badge">🏆 SUPER BOWL LX</span>
+    </div>
     
-        })
-
-        scoreboardTableBody = document.createElement('tbody')
-        scoreboardTableBody.className = 'scoreboardTable-Body'
-        scoreboardTable.append(scoreboardTableBody)
-        scoreDiv.append(scoreboardTable)
-        const leaderDiv = document.querySelector("div.leaderboard")
-        let leaderHeaders = ["Position", "Player", "Score"]
-
-        while (leaderDiv.firstChild) {
-            leaderDiv.removeChild(leaderDiv.firstChild)
-        }
-
-        // Create table
-        leaderboardTable = document.createElement('table')
-        leaderboardTable.className = 'leaderboardTable'
-
-        //Append Table to Div
-        leaderDiv.append(leaderboardTable)
-
-        //Create Table Header
-        leaderboardTableHead = document.createElement('thead')
-        leaderboardTableHead.className = 'leaderboardTableHead'
-
-        //Append Table head to table
-        leaderboardTable.append(leaderboardTableHead)
-
-        leaderboardTableHeaderRow = document.createElement('tr')
-        leaderboardTableHeaderRow.className = 'leaderboardTableHeaderRow'
-
-        leaderboardTableHead.append(leaderboardTableHeaderRow)
-
-        leaderHeaders.forEach(header => {
-            let leaderHeader = document.createElement('th')
-            leaderHeader.innerText = header
-            // console.log(header)
-            leaderboardTableHeaderRow.append(leaderHeader)
+    <div id="error-box" class="error-box"></div>
     
-        })
+    <div class="flex-container">
+        <div class="card seahawks">
+            <h2>
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#69BE28" stroke-width="2"><path d="M12 15l-2 5l9-11h-5l2-5l-9 11h5z"/></svg>
+                Leaderboard
+            </h2>
+            <div id="leaderboard" class="table-wrapper"><p class="loading">Loading...</p></div>
+        </div>
+        <div class="card patriots">
+            <h2>
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#C60C30" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Answer Key
+            </h2>
+            <div id="answers" class="table-wrapper"><p class="loading">Loading...</p></div>
+        </div>
+    </div>
+    
+    <div id="last-updated" class="last-updated"></div>
 
-        leaderboardTableBody = document.createElement('tbody')
-        leaderboardTableBody.className = 'leaderboardTable-Body'
-        leaderboardTable.append(leaderboardTableBody)
+<script>
+const LEADERBOARD_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY';
+const ANSWERS_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AO250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY&majorDimension=COLUMNS';
 
-        leaderDiv.append(leaderboardTable)
+function showError(msg) {
+    const box = document.getElementById('error-box');
+    box.style.display = 'block';
+    box.textContent = 'Error: ' + msg;
+}
 
+function renderLeaderboard(data) {
+    const container = document.getElementById('leaderboard');
+    if (!data.values || data.values.length < 3) {
+        container.innerHTML = '<p>No data available</p>';
+        return;
+    }
+    const rows = data.values.slice(2)
+        .map(row => ({ score: parseFloat(row[0]) || 0, name: row[1] || '' }))
+        .filter(p => p.name)
+        .sort((a, b) => b.score - a.score);
+    
+    let html = '<table><thead><tr><th>#</th><th>Player</th><th>Score</th></tr></thead><tbody>';
+    rows.slice(0, 3).forEach((row, i) => {
+        const cls = ` class="position-${i+1}"`;
+        const medal = i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : '🥉 ';
+        html += `<tr${cls}><td>${i+1}</td><td>${medal}${row.name}</td><td>${row.score}</td></tr>`;
+    });
+    
+    // Insert last place right after top 3
+    if (rows.length > 3) {
+        const last = rows[rows.length - 1];
+        html += `<tr class="position-last"><td>${rows.length}</td><td>💩 ${last.name}</td><td>${last.score}</td></tr>`;
+    }
+    
+    // Add remaining players (4th to second-to-last)
+    rows.slice(3, -1).forEach((row, i) => {
+        html += `<tr><td>${i+4}</td><td>${row.name}</td><td>${row.score}</td></tr>`;
+    });
+    
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+
+function renderAnswers(data) {
+    const container = document.getElementById('answers');
+    if (!data.values || data.values.length < 2) {
+        container.innerHTML = '<p>No data available</p>';
+        return;
+    }
+    let html = '<table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody>';
+    data.values.slice(1).forEach(col => {
+        if (col[0]) html += `<tr><td>${col[0]}</td><td>${col[1] || '—'}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+
+async function updateTables() {
+    try {
+        const [leaderRes, answerRes] = await Promise.all([
+            fetch(LEADERBOARD_URL),
+            fetch(ANSWERS_URL)
+        ]);
+        if (!leaderRes.ok) throw new Error('Leaderboard fetch failed: ' + leaderRes.status);
+        if (!answerRes.ok) throw new Error('Answers fetch failed: ' + answerRes.status);
         
+        const leaderData = await leaderRes.json();
+        const answerData = await answerRes.json();
+        
+        renderLeaderboard(leaderData);
+        renderAnswers(answerData);
+        document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+    } catch (err) {
+        console.error(err);
+        showError(err.message);
+    }
+}
 
-
-            axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY&majorDimension=COLUMNS')
-            .then(function(response) {
-                let data = response.data.values
-                // console.log(response.data)
-                var k;
-                for (k = 1; k < data.length; k++) {
-                    let scoreboardTableBodyRow = document.createElement('tr') // Create the current table row
-                    scoreboardTableBodyRow.className = 'scoreboardTableBodyRow'
-                    let question = document.createElement('td')
-                    question.innerText = data[k][0]
-                    // console.log(data[k][0])
-
-                    let answer = document.createElement('td')
-                    answer.innerText = data[k][1]
-                    scoreboardTableBodyRow.append(question, answer)
-                    scoreboardTable.append(scoreboardTableBodyRow)
-                }
-                
-            })
-
-            axios.get('https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY')
-            .then(function (response) {
-                let leaderData = response.data.values
-                console.log('leader data', leaderData)
-
-                leaderData.shift()
-                leaderData.shift()
-
-                var sortedArray = leaderData.sort(function(a, b) {
-                    return b[0] - a[0];
-                });
-                console.log('sorted', sortedArray)
-
-                var i;
-                for (i = 0; i < leaderData.length; i++) {
-                    let leaderboardTableBodyRow = document.createElement('tr') // Create the current table row
-                        leaderboardTableBodyRow.className = 'leaderboardTableBodyRow'
-
-                        let position = document.createElement('td')
-                        position.innerText= i + 1
-
-                        let player = document.createElement('td')
-                        player.innerText = leaderData[i][1]
-
-                        let score = document.createElement('td')
-
-                        score.innerText = leaderData[i][0]
-                        leaderboardTableBodyRow.append(position, player, score)
-                        leaderboardTable.append(leaderboardTableBodyRow)
-                }
-            })
-
-        }
-
-
-
-        updateTable()
-        setInterval(updateTable, 300000)
-
-    </script>
+updateTables();
+setInterval(updateTables, 300000);
+</script>
+</body>
 </html>
