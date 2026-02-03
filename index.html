@@ -60,6 +60,23 @@
             border-radius: 20px;
             margin-top: 8px;
         }
+        .submit-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #69BE28, #4a9e1c);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.75em;
+            padding: 8px 16px;
+            border-radius: 25px;
+            margin-top: 12px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(105,190,40,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(105,190,40,0.5);
+        }
         .error-box {
             background: #C60C30;
             color: white;
@@ -149,6 +166,7 @@
         <h1>Gehret Superbowl Pool</h1>
         <p class="subtitle">🏈 Seahawks vs Patriots 🏈</p>
         <span class="sb-badge">🏆 SUPER BOWL LX</span>
+        <a href="https://docs.google.com/forms/d/e/YOUR_FORM_ID_HERE/viewform" target="_blank" class="submit-btn">📝 Submit Your Picks</a>
     </div>
     
     <div id="error-box" class="error-box"></div>
@@ -174,7 +192,7 @@
 
 <script>
 const LEADERBOARD_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY';
-const ANSWERS_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AO250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY&majorDimension=COLUMNS';
+const ANSWERS_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY&majorDimension=COLUMNS';
 
 function showError(msg) {
     const box = document.getElementById('error-box');
