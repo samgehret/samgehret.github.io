@@ -174,7 +174,7 @@
 
 <script>
 const LEADERBOARD_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!C1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY';
-const ANSWERS_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AP250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY&majorDimension=COLUMNS';
+const ANSWERS_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1kEgQ-W-080sDbmVrsZEAxbsZf8E1vEzY7y9Odzq9T4s/values/Sheet1!D1:AO250?key=AIzaSyA4ZJ8dHfEVCBOgFyY-XILQ8nDxV6B-UAY&majorDimension=COLUMNS';
 
 function showError(msg) {
     const box = document.getElementById('error-box');
@@ -221,14 +221,25 @@ function renderLeaderboard(data) {
     
     let html = '<table><thead><tr><th>#</th><th>Player</th><th>Score</th></tr></thead><tbody>';
     
-    // Separate players into groups
+    // Separate players into groups (priority: 1st > 2nd > Last > Others)
     const firstPlace = rows.filter(r => r.score === firstPlaceScore);
-    const secondPlace = !firstPlaceTied ? rows.filter(r => uniqueScores.indexOf(r.score) + 1 === 2) : [];
-    const lastPlace = rows.filter(r => r.score === lastScore && rows.length > 1 && r.score !== firstPlaceScore);
+    const secondPlaceScore = uniqueScores[1];
+    const secondPlace = !firstPlaceTied && secondPlaceScore !== undefined && secondPlaceScore !== lastScore
+        ? rows.filter(r => r.score === secondPlaceScore)
+        : [];
+    
+    // Last place: exclude anyone already in 1st or 2nd
+    const lastPlace = rows.filter(r => 
+        r.score === lastScore && 
+        r.score !== firstPlaceScore && 
+        (firstPlaceTied || r.score !== secondPlaceScore)
+    );
+    
+    // Others: everyone not in 1st, 2nd, or last
     const others = rows.filter(r => {
         const isFirst = r.score === firstPlaceScore;
-        const isSecond = !firstPlaceTied && uniqueScores.indexOf(r.score) + 1 === 2;
-        const isLast = r.score === lastScore && rows.length > 1 && r.score !== firstPlaceScore;
+        const isSecond = secondPlace.some(s => s.name === r.name);
+        const isLast = lastPlace.some(l => l.name === r.name);
         return !isFirst && !isSecond && !isLast;
     });
     
@@ -240,16 +251,15 @@ function renderLeaderboard(data) {
         position++;
     });
     
-    // Second place (only if no tie for first)
+    // Second place (only if no tie for first and not same as last)
     secondPlace.forEach(row => {
         html += `<tr class="position-2"><td>${position}</td><td>🥈 ${row.name}</td><td>${row.score}</td></tr>`;
         position++;
     });
     
     // Last place (right after 1st/2nd)
-    lastPlace.forEach(row => {
-        const lastPosition = rows.indexOf(row) + 1;
-        html += `<tr class="position-last"><td>${rows.length - lastPlace.length + lastPlace.indexOf(row) + 1}</td><td>💩 ${row.name}</td><td>${row.score}</td></tr>`;
+    lastPlace.forEach((row, i) => {
+        html += `<tr class="position-last"><td>${rows.length - lastPlace.length + i + 1}</td><td>💩 ${row.name}</td><td>${row.score}</td></tr>`;
     });
     
     // Everyone else
